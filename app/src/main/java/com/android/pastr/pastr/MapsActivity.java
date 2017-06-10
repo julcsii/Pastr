@@ -1,6 +1,7 @@
 package com.android.pastr.pastr;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -28,11 +29,15 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, PlaceSelectionListener, GoogleApiClient.ConnectionCallbacks {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
+        GoogleApiClient.OnConnectionFailedListener, PlaceSelectionListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap mMap;
@@ -61,6 +66,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView textView;
     private TextView textView2;
     private Context context;
+    private LatLng latLngNode = new LatLng(47.49801, 19.03991);
+    private Marker myMarker;
 
 
     @Override
@@ -117,6 +124,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Get the current location of the device and set the position of the map.
         updateLocationUI();
         getDeviceLocation();
+        setupNodes(mMap);
+    }
+
+    private void setupNodes(GoogleMap mMap) {
+        mMap.setOnMarkerClickListener(this);
+
+        myMarker = mMap.addMarker(new MarkerOptions()
+                .position(latLngNode)
+                .title("Trial Node")
+                .snippet("This is my test app")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        if (marker.equals(myMarker))
+        {
+            Intent intent = new Intent(MapsActivity.this,NodeActivity.class);
+            startActivity(intent);
+        }
+
+        return true;
     }
 
     /**
@@ -277,8 +306,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final LatLng latLng = place.getLatLng();
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
-        mMap.clear();
-        mMap.addMarker(new MarkerOptions().position(latLng));
+        //mMap.addMarker(new MarkerOptions().position(latLng));
     }
 
     @Override
@@ -288,5 +316,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toast.makeText(this, "Place selection failed: " + status.getStatusMessage(),
                 Toast.LENGTH_SHORT).show();
     }
+
 
 }
