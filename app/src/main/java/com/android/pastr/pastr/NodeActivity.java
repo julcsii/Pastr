@@ -1,35 +1,31 @@
 package com.android.pastr.pastr;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.vr.sdk.widgets.pano.VrPanoramaView;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 public class NodeActivity extends AppCompatActivity {
+    private VrPanoramaView mVrPanoramaView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_node);
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Add VR content", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        fab.setImageResource( R.drawable.cardboard_icon);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -40,6 +36,45 @@ public class NodeActivity extends AppCompatActivity {
             }
         });
 
+        mVrPanoramaView = (VrPanoramaView) findViewById(R.id.pano_view);
+
+        loadPhotoSphere();
+    }
+
+
+    private void loadPhotoSphere() {
+        //This could take a while. Should do on a background thread, but fine for current example
+        VrPanoramaView.Options options = new VrPanoramaView.Options();
+        InputStream inputStream = null;
+
+        AssetManager assetManager = getAssets();
+
+        try {
+            inputStream = assetManager.open("kalvin2.jpg");
+            options.inputType = VrPanoramaView.Options.TYPE_MONO;
+            mVrPanoramaView.loadImageFromBitmap(BitmapFactory.decodeStream(inputStream), options);
+            inputStream.close();
+        } catch (IOException e) {
+            Log.e("Tuts+", "Exception in loadPhotoSphere: " + e.getMessage() );
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        mVrPanoramaView.pauseRendering();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mVrPanoramaView.resumeRendering();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mVrPanoramaView.shutdown();
+        super.onDestroy();
     }
     /**
      * Sets up the options menu.

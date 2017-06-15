@@ -66,7 +66,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView textView;
     private TextView textView2;
     private Context context;
-    private LatLng latLngNode = new LatLng(47.49801, 19.03991);
+    private LatLng latLngNode = new LatLng(47.488658, 19.061269);
     private Marker myMarker;
 
 
