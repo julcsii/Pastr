@@ -40,4 +40,5 @@ dependencies {
     compile 'com.google.vr:sdk-panowidget:1.10.0'
     compile 'com.google.vr:sdk-videowidget:1.10.0'
     testCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }

@@ -137,7 +137,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         myMarker = mMap.addMarker(new MarkerOptions()
                 .position(latLngNode)
-                .title("Trial Node")
+                .title("Kálvin square")
                 .snippet("This is my test app")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
     }
@@ -272,26 +272,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         getMenuInflater().inflate(R.menu.map_menu, menu);
         return true;
     }
+    Intent intent;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.upload:
-                Intent intent = new Intent(MapsActivity.this,LoginActivity.class);
+                intent = new Intent(MapsActivity.this,LoginActivity.class);
                 startActivity(intent);
+                return true;
             case R.id.app_bar_search:
                 try {
-                    Intent placeIntent =
+                     intent =
                             new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                                    .build(this);
-                    startActivityForResult(placeIntent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+                                    .build(MapsActivity.this);
+                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
                 } catch (GooglePlayServicesRepairableException e) {
                     // TODO: Handle the error.
                 } catch (GooglePlayServicesNotAvailableException e) {
                     // TODO: Handle the error.
                 }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 
 
