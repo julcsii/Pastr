@@ -3,13 +3,11 @@ package com.android.pastr.pastr;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * Created by Julia.hermann93 on 2017.06.17..
  */
-@RunWith(MockitoJUnitRunner.class)
+
 public class LoginActivityTest {
 
     @Test
